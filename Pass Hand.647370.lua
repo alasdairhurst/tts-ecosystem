@@ -55,18 +55,16 @@ function onClick_RotateHandsClockwise()
             moveToIndex = i + 1
         end
         local moveToPlayer = playersClockwise[moveToIndex]
-        rotationOffsetY = moveToPlayer.getHandTransform().rotation.y - player.getHandTransform().rotation.y
-        if rotationOffsetY < 0
-        then
-            rotationOffsetY = rotationOffsetY + 360
-        end
-        --print("DEBUG: Moving cards from " .. i .. " : " .. player.color ..
-        --    " to " .. moveToIndex .. " : " .. moveToPlayer.color ..
-        --    " and rotating " .. rotationOffsetY .. " degrees")
-        for i,card in ipairs(player.getHandObjects()) do
-            card.setPosition(getPlayerHandPosition(moveToPlayer))
-            card.rotate({0, rotationOffsetY, 0})
-
+        local handRotation = moveToPlayer.getHandTransform().rotation
+        -- ensure the cards are facing the towards the player
+        handRotation.y = handRotation.y + 180
+        local handPosition = moveToPlayer.getHandTransform().position
+        local cards = player.getHandObjects()
+        -- print("DEBUG: Moving cards from " .. i .. " : " .. player.color ..
+        -- " to " .. moveToIndex .. " : " .. moveToPlayer.color)
+        for i,card in ipairs(cards) do
+            card.setPosition(handPosition)
+            card.setRotation(handRotation)
         end
     end
 end
@@ -88,18 +86,16 @@ function onClick_RotateHandsCounterClockwise()
             moveToIndex = i + 1
         end
         local moveToPlayer = playersCounterClockwise[moveToIndex]
-        rotationOffsetY = moveToPlayer.getHandTransform().rotation.y - player.getHandTransform().rotation.y
-        if rotationOffsetY < 0
-        then
-            rotationOffsetY = rotationOffsetY + 360
-        end
-        --print("DEBUG: Moving cards from " .. i .. " : " .. player.color ..
-        --    " to " .. moveToIndex .. " : " .. moveToPlayer.color ..
-        --    " and rotating " .. rotationOffsetY .. " degrees")
-        for i,card in ipairs(player.getHandObjects()) do
-            card.setPosition(getPlayerHandPosition(moveToPlayer))
-            card.rotate({0, rotationOffsetY, 0})
-
+        local handRotation = moveToPlayer.getHandTransform().rotation
+        -- ensure the cards are facing the towards the player
+        handRotation.y = handRotation.y + 180
+        local handPosition = moveToPlayer.getHandTransform().position
+        local cards = player.getHandObjects()
+        -- print("DEBUG: Moving cards from " .. i .. " : " .. player.color ..
+        -- " to " .. moveToIndex .. " : " .. moveToPlayer.color)
+        for i,card in ipairs(cards) do
+            card.setPosition(handPosition)
+            card.setRotation(handRotation)
         end
     end
 end
@@ -118,11 +114,6 @@ function getRealSeatedPlayers()
         end
     end
     return players
-end
-
-function getPlayerHandPosition(player)
-    hand = player.getPlayerHand()
-    return {hand.pos_x, hand.pos_y, hand.pos_z}
 end
 
 -- Returns a Table with player angles (in radians) as the keys
